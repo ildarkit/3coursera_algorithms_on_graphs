@@ -1,12 +1,49 @@
 # Uses python3
 
 import sys
-import queue
+
+
+BIG_DIST = 100000000
 
 
 def distance(adj, cost, s, t):
     # write your code here
-    return -1
+    return dijkstra(adj, cost, s, t)
+    # return min_cost(s, t, prev, dist)
+
+
+def dijkstra(adj, cost, s, t):
+    dist = []
+    # prev = []
+    used = []
+    for _ in range(len(adj)):
+        dist.append(BIG_DIST)
+        # prev.append(None)
+        used.append(None)
+    dist[s] = 0
+    queue = [s]
+    while queue:
+        u = queue.pop()
+        for i, v in enumerate(adj[u]):
+            if used[v] is None:
+                queue.insert(0, v)
+                used[v] = v
+            if dist[v] > dist[u] + cost[u][i]:
+                dist[v] = dist[u] + cost[u][i]
+                # prev[v] = u
+    return dist[t] if dist[t] != BIG_DIST else -1
+
+
+# def min_cost(s, t, prev, dist):
+#     result = 0
+#     while s != t:
+#         if t is not None:
+#             if dist[t]:
+#                 result += dist[t]
+#         else:
+#             return -1
+#         t = prev[t]
+#     return result
 
 
 if __name__ == '__main__':
