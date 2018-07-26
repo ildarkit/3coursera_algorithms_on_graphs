@@ -10,6 +10,7 @@ if __name__ == '__main__':
     stop = 1000
     total = 0
     err = 0
+    result = "{0:.9f}"
     while True:
         total += 1
         points = points_generator()
@@ -19,8 +20,8 @@ if __name__ == '__main__':
         n = data[0]
         x = data[1::2]
         y = data[2::2]
-        res1 = kruskal(x, y, n)
-        res2 = prim(x, y, n)
+        res1 = result.format(kruskal(x, y, n))
+        res2 = result.format(prim(x, y, n))
         if res1 != res2:
             err += 1
             print('res1 = {}, res2 = {}'.format(res1, res2))
