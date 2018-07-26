@@ -53,18 +53,16 @@ def kruskal(edges, len_vertices):
     # sorting edges in non-decreasing weight order
     edges = sorted(edges, key=lambda edge: edge[2])
     for v, u, w in edges:
-        if not disjoint_set[v][0] is disjoint_set[u][0]:
+        if disjoint_set[v][0] != disjoint_set[u][0]:
             # Vertices v and u are in different disjoint sets.
             # Sum the weight of an edge between vertices v and u
             min_lenght += w
             # union of sets
             disjoint_set[v][0].update(disjoint_set[u][0])
-            if linked[u]:
-                # The element in the index u (the list in this case)
-                # is the same object in some other index,
-                # so only the content of the list is updated.
-                disjoint_set[u][0] = disjoint_set[v][0]
-            else:
+            if len(disjoint_set[v][0]) == len_vertices:
+                break
+            disjoint_set[u][0] = disjoint_set[v][0]
+            if not linked[u]:
                 # In disjoint_set[u], a list of disjoint_set[v] is written.
                 # Thus, when accessing different elements of the disjoint_set list,
                 # the same object is accessed (list) with the union set inside.
