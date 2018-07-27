@@ -70,6 +70,9 @@ def kruskal(edges, len_vertices):
                 # Flags are set that these elements represent
                 # the same set (the same object in Python)
                 linked[u] = linked[v] = True
+            if not linked[v]:
+                disjoint_set[v] = disjoint_set[u]
+                linked[u] = linked[v] = True
     return min_lenght
 
 
