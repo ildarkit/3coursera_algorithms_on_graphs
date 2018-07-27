@@ -2,7 +2,7 @@
 import sys
 import math
 
-from priority_queue import PriorityQueue
+from priority_queue import PriorityQueue, MinBinaryHeap
 
 
 BIG_DIST = 100000000.
@@ -28,17 +28,18 @@ def prim(x_points, y_points, n):
     min_length = 0.
     # The priority queue is min binary heap.
     pqueue = PriorityQueue(cost)
-    while cost:
-        v = pqueue.extract_min()
-        min_length += v[1]
-        for i, p in enumerate(cost):
+    min_heap = MinBinaryHeap()
+    while pqueue:
+        min_weighted_vertex = min_heap.extract_min(pqueue)
+        min_length += min_weighted_vertex[1]
+        for i, p in enumerate(pqueue):
             # Calculation of the weight of the edge {v, u}
             # (the length of the segment between the points {x1, y1} and {x2, y2})
-            edge_weight = math.sqrt((x_points[v[0]] - x_points[p[0]]) ** 2
-                                    + (y_points[v[0]] - y_points[p[0]]) ** 2
+            edge_weight = math.sqrt((x_points[min_weighted_vertex[0]] - x_points[p[0]]) ** 2
+                                    + (y_points[min_weighted_vertex[0]] - y_points[p[0]]) ** 2
                                     )
             if p[1] > edge_weight:
-                pqueue.change_priority(i, p[0], edge_weight)
+                min_heap.change_priority(pqueue, i, p[0], edge_weight)
     return min_length
 
 

@@ -1,56 +1,101 @@
+class BinaryHeap:
+
+    @staticmethod
+    def left_child(i):
+        return i*2 + 1
+
+    @staticmethod
+    def right_child(i):
+        return i*2 + 2
+
+    @staticmethod
+    def parent(i):
+        return (i - 1) // 2
+
+    def insert(self, heap, p):
+        heap.append(p)
+        self.sift_up(heap, len(heap) - 1)
+
+    def sift_up(self, *args):
+        raise NotImplementedError
+
+    def sift_down(self, *args):
+        raise NotImplementedError
+
+    def change_priority(self, *args):
+        raise NotImplementedError
+
+
+class MinBinaryHeap(BinaryHeap):
+
+    def extract_min(self, heap):
+        """
+        Get min element from root of heap.
+        :return: tuple of vertex
+        """
+        result = heap.get_first_item()
+        heap.swappop()
+        self.sift_down(heap, 0)
+        return result
+
+    def sift_down(self, heap, i):
+        size = len(heap)
+        min_index = i
+        l = self.left_child(i)
+        if l <= size - 1 and heap[l] < heap[min_index]:
+            min_index = l
+        r = self.right_child(i)
+        if r <= size - 1 and heap[r] < heap[min_index]:
+            min_index = r
+        if i != min_index:
+            heap.swap(i, min_index)
+            self.sift_down(heap, min_index)
+
+    def sift_up(self, heap, i):
+        while i > 0 and heap[self.parent(i)] > heap[i]:
+            _parent = self.parent(i)
+            heap.swap(_parent, i)
+            i = _parent
+
+    def change_priority(self, heap, i, vertex, weight):
+        old = heap[i]
+        heap[i] = (vertex, weight)
+        if old > weight:
+            self.sift_up(heap, i)
+        else:
+            self.sift_down(heap, i)
+
+
 class PriorityQueue:
 
     def __init__(self, vertices):
         self.vertices = vertices
 
-    def extract_min(self):
-        """
-        Get min element from root of heap.
-        :return: tuple of vertex
-        """
-        result = self.vertices[0]
+    def __getitem__(self, item):
+        return self.vertices[item][1]
+
+    def __setitem__(self, key, value):
+        self.vertices[key] = value
+
+    def __len__(self):
+        return len(self.vertices)
+
+    def __iter__(self):
+        self.iterator = iter(self.vertices)
+        return self.iterator
+
+    def __next__(self):
+        return next(self.iterator)
+
+    def get_first_item(self):
+        return self.vertices[0]
+
+    def swappop(self):
         self.vertices[0] = self.vertices[-1]
         self.vertices.pop()
-        self.sift_down(0)
-        return result
 
-    def sift_down(self, i):
-        size = len(self.vertices)
-        min_index = i
-        l = self.left_child(i)
-        if l <= size - 1 and self.vertices[l][1] < self.vertices[min_index][1]:
-            min_index = l
-        r = self.right_child(i)
-        if r <= size - 1 and self.vertices[r][1] < self.vertices[min_index][1]:
-            min_index = r
-        if i != min_index:
-            self.vertices[i], self.vertices[min_index] = (self.vertices[min_index],
-                                                          self.vertices[i])
-            self.sift_down(min_index)
+    def swap(self, i, j):
+        self.vertices[i], self.vertices[j] = self.vertices[j], self.vertices[i]
 
-    def left_child(self, i):
-        return i*2 + 1
-
-    def right_child(self, i):
-        return i*2 + 2
-
-    def parent(self, i):
-        return (i - 1) // 2
-
-    def insert(self, p):
-        self.vertices.append(p)
-        self.sift_up(len(self.vertices) - 1)
-
-    def sift_up(self, i):
-        while i > 0 and self.vertices[self.parent(i)][1] > self.vertices[i][1]:
-            _parent = self.parent(i)
-            self.vertices[_parent], self.vertices[i] = self.vertices[i], self.vertices[_parent]
-            i = _parent
-
-    def change_priority(self, i, *p):
-        old = self.vertices[i]
-        self.vertices[i] = p
-        if old[1] > p[1]:
-            self.sift_up(i)
-        else:
-            self.sift_down(i)
+    def append(self, v):
+        self.vertices.append(v)
