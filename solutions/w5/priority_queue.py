@@ -27,6 +27,9 @@ class BinaryHeap:
 
 
 class MinBinaryHeap(BinaryHeap):
+    """
+    Minimum binary heap.
+    """
 
     def extract_min(self, heap):
         """
@@ -41,12 +44,12 @@ class MinBinaryHeap(BinaryHeap):
     def sift_down(self, heap, i):
         size = len(heap)
         min_index = i
-        l = self.left_child(i)
-        if l <= size - 1 and heap[l] < heap[min_index]:
-            min_index = l
-        r = self.right_child(i)
-        if r <= size - 1 and heap[r] < heap[min_index]:
-            min_index = r
+        left = self.left_child(i)
+        if left <= size - 1 and heap[left] < heap[min_index]:
+            min_index = left
+        right = self.right_child(i)
+        if right <= size - 1 and heap[right] < heap[min_index]:
+            min_index = right
         if i != min_index:
             heap.swap(i, min_index)
             self.sift_down(heap, min_index)
